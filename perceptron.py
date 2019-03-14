@@ -36,11 +36,11 @@ def plot_line(line):
 
     
 class Perceptron:
-    def __init__(self, line, red_points, blue_points, epochs, learning_rate):
+    def __init__(self, line, red_points, blue_points, iterations, learning_rate):
         self.line = line
         self.red_points = red_points
         self.blue_points = blue_points
-        self.epochs = epochs
+        self.iterations = iterations
         self.learning_rate = learning_rate
 
     def train(self, show_info = False):
@@ -48,7 +48,7 @@ class Perceptron:
         Calculates the line of best fit for the given points
         '''
         
-        for i in range(1, self.epochs):
+        for i in range(1, self.iterations):
             point = self.get_random_point()
             
             if point.color == Colors.BLUE and self.point_is_in_area(point, Colors.RED):
@@ -62,7 +62,7 @@ class Perceptron:
                 self.line.c += self.learning_rate
                 
             if i % 10 == 0 and show_info:
-                self.show_error()
+                self.show_info(i)
                 
     def get_random_point(self):
         '''
@@ -133,7 +133,7 @@ class Perceptron:
                 
         return incorrect_points
         
-    def show_error(self):
+    def show_info(self, iteration):
         '''
         Displays to the user how many points are incorrect
         '''
@@ -141,7 +141,9 @@ class Perceptron:
         incorrect = self.incorrect_point_count()
         total = len(self.red_points) + len(self.blue_points)
         
-        print('Incorrect points: ' + str(incorrect) + ' of ' + str(total) + ' (' + str(incorrect / total * 100) + '%)')
+        iterations = 'Interation ' + str(iteration) + ' of ' + str(self.iterations) + '...'
+        percentage = str(incorrect) + ' of ' + str(total) + ' are incorrect (' + str(incorrect / total * 100) + '%)'
+        print(iterations, percentage)
         
     def draw(self):
         xlim = 8
@@ -172,20 +174,21 @@ class Perceptron:
         figure.canvas.draw()
         
 
-pointCount = 50
+point_count = 50
 line = Line(2, 3, -6) # 2x + 3y - 6 = 0
-epochs = 1500
-learningRate = 0.01
+iterations = 1500
+learning_rate = 0.01
 
-xRed = np.random.randn(pointCount, 1) + 1
-yRed = xRed * 0.2 + np.random.randn(pointCount, 1) * 1.6 + 6
-xBlue = np.random.randn(pointCount, 1) + 0.5
-yBlue = xBlue * 3.2 + np.random.randn(pointCount, 1) * 1.6
+x_red = np.random.randn(point_count, 1) + 1
+y_red = x_red * 0.2 + np.random.randn(point_count, 1) * 1.6 + 6
+x_blue = np.random.randn(point_count, 1) + 0.5
+y_blue = x_blue * 3.2 + np.random.randn(point_count, 1) * 1.6
 
-redPoints = list(zip(xRed, yRed))
-bluePoints = list(zip(xBlue, yBlue))
+red_points = list(zip(x_red, y_red))
+blue_points = list(zip(x_blue, y_blue))
 
-perceptron = Perceptron(line, redPoints, bluePoints, epochs, learningRate) 
+# Show before and after training
+perceptron = Perceptron(line, red_points, blue_points, iterations, learning_rate) 
 perceptron.draw()
-perceptron.train()
+perceptron.train(True)
 perceptron.draw()
