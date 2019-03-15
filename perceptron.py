@@ -96,6 +96,8 @@ class Perceptron:
         if ax + by + c < 0:
             point_location = Colors.BLUE
             
+        # Note that if neither of the above cases are true, our point is on
+        # the line itself, and this comparison will be false
         return point_location == area
     
     def get_points_x(self, color):
@@ -175,8 +177,8 @@ class Perceptron:
         
 
 point_count = 50
-line = Line(2, 3, -6) # 2x + 3y - 6 = 0
-iterations = 1500
+line = Line(-7, -3, -6) # -7x - 3y - 6 = 0
+iterations = 2000
 learning_rate = 0.01
 
 x_red = np.random.randn(point_count, 1) + 1
